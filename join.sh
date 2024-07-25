@@ -1,5 +1,5 @@
 #!/bin/bash
 
-mkdir -p output
+mkdir -p built
 
-cat *.pub > output/combined.txt
+cat *.pub > built/combined.txt
