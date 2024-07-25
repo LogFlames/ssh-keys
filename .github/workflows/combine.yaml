@@ -21,10 +21,26 @@ jobs:
         chmod +x ./join.sh
         ./join.sh
 
-    # Publish the artifact
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
+    # Create a release
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: my-artifact
-        path: output/combined.txt  # Replace with the actual path to your artifact
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: Release notes for ${{ github.ref }}
+        draft: false
+        prerelease: false
 
+    # Upload assets to the release
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: output/combined.txt
+        asset_name: combined.txt
+        asset_content_type: text/plain
