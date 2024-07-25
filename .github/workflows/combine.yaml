@@ -40,7 +40,7 @@ jobs:
     - name: Commit new file
       run: |
         git add built/combined.txt
-        git commit -m "Build"
+        git commit -m "Build [skip ci]"
         git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
