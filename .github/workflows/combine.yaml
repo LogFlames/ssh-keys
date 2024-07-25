@@ -21,26 +21,17 @@ jobs:
         chmod +x ./join.sh
         ./join.sh
 
-    # Create a release
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: Release notes for ${{ github.ref }}
-        draft: false
-        prerelease: false
+    # Configure Git
+    - name: Set up Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-    # Upload assets to the release
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
+    # Commit the new file
+    - name: Commit new file
+      run: |
+        git add built/combined.txt
+        git commit -m "Add build file"
+        git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: output/combined.txt
-        asset_name: combined.txt
-        asset_content_type: text/plain
